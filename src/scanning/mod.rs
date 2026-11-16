@@ -13,7 +13,11 @@ pub mod rescanner;
 pub fn run(address: Ipv4Addr, port: u16) -> JoinHandle<anyhow::Result<MinecraftServer>> {
 	tokio::spawn(async move {
 		let socket = SocketAddrV4::new(address, port);
-		let mut stream = TcpStream::connect(socket).await.unwrap();
+		let mut stream = match tokio::time::timeout(Duration::from_secs(4), TcpStream::connect(socket)).await {
+			Ok(Ok(stream)) => stream,
+			Ok(Err(e)) => bail!("{e}"),
+			Err(e) => bail!("{e}"),
+		};
 
 		return match tokio::time::timeout(
 			Duration::from_secs(4),
