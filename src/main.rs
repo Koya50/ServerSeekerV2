@@ -1,5 +1,3 @@
-#![feature(string_from_utf8_lossy_owned)]
-
 mod config;
 mod database;
 mod protocol;
