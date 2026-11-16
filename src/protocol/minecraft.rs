@@ -67,7 +67,7 @@ pub async fn simple_ping(stream: &mut TcpStream) -> anyhow::Result<String> {
 		.read_to_end(&mut output)
 		.await?;
 
-	Ok(String::from_utf8_lossy_owned(output))
+	Ok(String::from_utf8_lossy(&output).into_owned())
 }
 
 // returns the decoded varint and how many bytes were read
